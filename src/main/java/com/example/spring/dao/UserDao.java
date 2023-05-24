@@ -2,20 +2,20 @@ package com.example.spring.dao;
 
 import com.example.spring.domain.User;
 
-import java.sql.*;
-import java.util.Map;
-
-import static java.lang.System.getenv;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class UserDao {
-    SimpleConnectionMaker simpleConnectionMaker;
+    ConnectionMaker connectionMaker;
 
-    public UserDao(SimpleConnectionMaker simpleConnectionMaker) {
-        this.simpleConnectionMaker = simpleConnectionMaker;
+    public UserDao(ConnectionMaker connectionMaker) {
+        this.connectionMaker = connectionMaker;
     }
 
     public void add(User user) throws ClassNotFoundException, SQLException {
-        Connection conn = simpleConnectionMaker.makeNewConnection();
+        Connection conn = connectionMaker.getConnection();
         PreparedStatement pstmt = conn.prepareStatement("insert into users(id, name, password) values(?, ?, ?)");
         pstmt.setString(1, user.getId());
         pstmt.setString(2, user.getName());
@@ -27,7 +27,7 @@ public class UserDao {
 
     }
     public User get(String id) throws ClassNotFoundException, SQLException {
-        Connection conn = simpleConnectionMaker.makeNewConnection();
+        Connection conn = connectionMaker.getConnection();
 
         PreparedStatement pstmt = conn.prepareStatement("select id, name, password from users where id = ?");
         pstmt.setString(1, id);
@@ -49,7 +49,7 @@ public class UserDao {
 
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        UserDao userDao = new UserDao();
+        UserDao userDao = new UserDao(new NConnectionMaker());
         User user = new User();
         user.setId("4");
         user.setName("kyeongrok");

@@ -1,7 +1,5 @@
 package com.example.spring.dao;
 
-import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -9,8 +7,9 @@ import java.util.Map;
 
 import static java.lang.System.getenv;
 
-public class SimpleConnectionMaker {
-    public Connection makeNewConnection() throws ClassNotFoundException, SQLException {
+public class NConnectionMaker implements ConnectionMaker{
+    @Override
+    public Connection getConnection() throws SQLException, ClassNotFoundException {
         Map<String, String> env = getenv();
         String dbHost = env.get("DB_HOST");
         String dbUser = env.get("DB_USER");
